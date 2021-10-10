@@ -1,0 +1,274 @@
+<script>
+    function install(app, installed) {
+        if (!installed) {
+            parent.postMessage({
+                use: "SUS_INSTALL",
+                pkg: app
+            }, '*');
+        } else {
+            parent.postMessage({
+                use: "SUS_UNINSTALL",
+                pkg: app
+            }, '*');
+        }
+    }
+
+    function terminal() {
+        parent.postMessage({
+            use: "SUS_TERMINAL"
+        }, '*')
+    }
+
+    function run(exe) {
+        parent.postMessage({
+            use: "SUS_RUN",
+            exe: exe
+        }, '*');
+    }
+
+    function uninstall() {
+        parent.postMessage({
+            use: "SUS_DESTROY"
+        }, '*')
+    }
+</script>
+<div class="tabs-container">
+    <div class="tab" onclick="tab('packages')">packages</div>
+    <div class="tab" onclick="tab('settings')">settings</div>
+    <div class="tab" onclick="tab('contribute')">contribute</div>
+</div>
+<diu class="seperator">
+    <p style="opacity: 0;">seperator</p>
+    </div>
+    <div tab="packages" class="page">
+
+    </div>
+    <div tab="settings" class="page">
+        currently, there are no settings
+        <p>
+            <a onclick="terminal()">[OPEN TERMINAL]</a></br>
+            <a onclick="uninstall()">[UNINSTALL]</a>
+        </p>
+    </div>
+    <div tab="contribute" class="page">
+        <h2>contribute</h2>
+        sus93 is open-source, meaning you can upload your own modules (as long as they meet the requirements)!
+        <p>
+            <a href="https://github.com/parabirb/sus93" target="_blank">you can visit their github for more information.</a>
+            <p>
+                sus93+ is <a href="https://github.com/protogenraymond/sus93plus" target="_blank">also open-source</a>, but it's not used for uploading modules, that's only for sus93. sus93 and sus93+ are two different repositories!
+                <p>
+                    <h2>credits</h2>
+                    sus93 package library: parabirb</br>
+                    sus93plus graphical interface: protogenraymond
+                </p>
+            </p>
+        </p>
+    </div>
+    <div tab="installing" class="page">
+        installing an application...
+        <p>
+            please do not close this window or change tabs while this is happening.
+    </div>
+    <canvas class="bg" width=1500 height=750></canvas>
+    <style>
+        @font-face {
+            font-family: "susfont";
+            src: url("SUS93PLUSFONT");
+        }
+        
+        body {
+            font-family: "susfont";
+            font-size: 12px;
+        }
+        
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .pkg {
+            width: 90%;
+            height: 50px;
+            background: #c4c4c4;
+            border: solid;
+            border-width: 2px;
+            border-bottom-color: #424242;
+            border-right-color: #424242;
+            border-left-color: #fff;
+            border-top-color: #fff;
+            padding: 10px;
+            margin-bottom: 25px;
+            position: relative;
+            left: calc(5% - 10px);
+            z-index: 5;
+            cursor: pointer;
+        }
+        
+        .pkg:hover {
+            background: #c0c0c0;
+        }
+        
+        .pkg-icon {
+            width: 50px;
+            height: 50px;
+            image-rendering: optimizeSpeed;
+            image-rendering: pixelated;
+            float: left;
+            margin-right: 15px;
+        }
+        
+        .tabs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 35px;
+            background: #c4c4c4;
+            z-index: 10;
+        }
+        
+        .tab {
+            width: calc(100% / 3);
+            height: 35px;
+            float: left;
+            line-height: 35px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .tab:hover {
+            background: #c0c0c0;
+        }
+        
+        * {
+            color: black;
+        }
+        
+        a {
+            cursor: pointer;
+        }
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        
+        body {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+        
+        input {
+            background: #c4c4c4;
+            border: solid;
+            border-width: 2px;
+            border-bottom-color: #424242;
+            border-right-color: #424242;
+            border-left-color: #fff;
+            border-top-color: #fff;
+        }
+    </style>
+    <script>
+        var installing = false;
+        var opentab = null;
+        var ctx = document.querySelector('canvas').getContext('2d');
+        var step = -4;
+
+        setInterval(function() {
+            ctx.clearRect(0, 0, 1500, 750);
+            var width = ctx.canvas.width;
+            var height = ctx.canvas.height;
+            var scale = 20;
+
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#c7c7c7";
+
+            var x = 0;
+            var y = height / 2 + amplitude * Math.sin((x + step) / frequency) + 250;
+            var amplitude = 30;
+            var frequency = 100;
+            ctx.moveTo(x, y);
+            while (x < width) {
+                y = height / 2 + amplitude * Math.sin((x + step) / frequency) + 250;
+                ctx.lineTo(x, y);
+                ctx.lineTo(x, 1500);
+                x++;
+            }
+            ctx.stroke();
+            step += 2.5 * 10;
+        }, 10 * 10);
+
+        function tab(tabname) {
+            if (!installing) {
+                document.querySelectorAll('.page').forEach((tabs) => {
+                    if (tabs.getAttribute('tab') == tabname) {
+                        tabs.style.display = "block";
+                        opentab = tabname;
+                    } else {
+                        tabs.style.display = "none";
+                    }
+                });
+            }
+        };
+        tab('packages');
+        window.addEventListener('message', event => {
+            if (typeof event.data === 'object') {
+                switch (event.data.use) {
+                    case "REPO_DATA":
+                        document.querySelector('[tab="packages"]').innerHTML = "";
+                        event.data.repo.split(' ').forEach((item) => {
+                            if (item != "sus93") {
+                                document.querySelector('[tab="packages"]').innerHTML += `<div class="pkg" id="pkg-${item}"); return false;"><img class="pkg-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAVUExURYCAgP///wAAAMDAwIS9/1iUvwAAALlhqwEAAAAHdFJOU////////wAaSwNGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAeElEQVQ4T83TOQKAIAwEQBCS/z/ZXIBHtrCSLUxwp6ChMHNJIr89Buor5fAagykQaEMgUIeAYAh4SQsGlvYZ9B5LZFfQJXFKgSeOKZhfDbpDDohoAbJ5A9ITOZAhWJcLsN6BDtl1WcB7b+b4BzyzF2ggA/gjycLMJ/9hDK2LxkejAAAAAElFTkSuQmCC">${item}</br>${event.data.installed.includes(item) ? "installed" : "not installed"}</div>`;
+                            }
+                        });
+                        setTimeout(function() {
+                            document.querySelector('[tab="packages"]').innerHTML += '<p style="text-align: center">you\'ve reached the end of the list.</p>';
+                            event.data.repo.split(' ').forEach((item) => {
+                                if (document.getElementById('pkg-' + item)) {
+                                    var elem = document.getElementById('pkg-' + item);
+                                    if (event.data.installed.includes(item)) {
+                                        elem.addEventListener('contextmenu', (e) => {
+                                            e.preventDefault();
+                                            install(item, true);
+                                        });
+                                        elem.addEventListener('click', (e) => {
+                                            run(item);
+                                        })
+                                    } else {
+                                        elem.addEventListener('click', (e) => {
+                                            install(item, false);
+                                        })
+                                    }
+                                }
+                            });
+                        }, 150);
+                        break;
+                    case "INSTALLING":
+                        tab('installing');
+                        installing = true;
+                        break;
+                    case "NOT_INSTALLING":
+                        installing = false;
+                        tab('packages');
+                        parent.postMessage({
+                            use: "SUS_REPO_DATA"
+                        }, '*');
+                        break;
+                }
+            };
+
+        });
+
+        parent.postMessage({
+            use: "SUS_REPO_DATA"
+        }, '*')
+    </script>
