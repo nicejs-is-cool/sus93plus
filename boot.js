@@ -1,3 +1,5 @@
+le.sus93plus = true; // make sure the installer knows its already installed lol
+
 var birb_url = ""
 var birb_icon = document.createElement('canvas');
 birb_icon.width = 32;
